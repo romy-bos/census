@@ -1,18 +1,18 @@
----
-title: "Analyzing US Census Data"
-format: html
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(tidycensus)
 library(sf)
-```
-
-```{r}
+#
+#
+#
 #| message: false
 income_tx <- get_acs(
   geography = "county",
@@ -21,9 +21,9 @@ income_tx <- get_acs(
   year = 2020,
   geometry = TRUE
 )
-```
-
-```{r}
+#
+#
+#
 ggplot(income_tx) +
   geom_sf(aes(fill = estimate)) +
   scale_fill_viridis_c() +
@@ -33,9 +33,9 @@ ggplot(income_tx) +
     caption = "Source: U.S. Census Bureau, 2020 ACS 5-year estimates"
   ) +
   theme_void()
-```
-
-```{r}
+#
+#
+#
 #| message: false
 #| cache: true
 edu_state <- get_acs(
@@ -50,9 +50,9 @@ edu_state <- get_acs(
   summary_var = "B15003_001",
   year = 2020
 )
-```
-
-```{r}
+#
+#
+#
 edu_state |>
   group_by(GEOID, NAME) |>
   summarize(
@@ -61,17 +61,9 @@ edu_state |>
     pct_bachelor_plus = 100 * bachelor_plus / total_adults,
     .groups = "drop"
   ) |>
-  arrange(pct_bachelor_plus) |>
-  ggplot(aes(x = reorder(NAME, pct_bachelor_plus), y = pct_bachelor_plus)) +
-  geom_col() +
-  coord_flip() +
-  scale_y_continuous(labels = scales::label_percent(scale = 1)) +
-  labs(
-    title = "Adults with a Bachelor's Degree or Higher by State",
-    x = "State",
-    y = "Adults with a bachelor's degree or higher",
-    caption = "Source: U.S. Census Bureau, 2020 ACS 5-year estimates"
-  ) +
-  theme_minimal()
-```
-
+  arrange(desc(pct_bachelor_plus))
+#
+#
+#
+#
+#
