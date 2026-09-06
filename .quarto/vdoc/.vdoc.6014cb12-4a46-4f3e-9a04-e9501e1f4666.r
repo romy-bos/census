@@ -1,18 +1,18 @@
----
-title: "Analyzing US Census Data"
-format: html
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(tidycensus)
 library(sf)
-```
-
-```{r}
+#
+#
+#
 #| message: false
 income_tx <- get_acs(
   geography = "county",
@@ -21,9 +21,9 @@ income_tx <- get_acs(
   year = 2020,
   geometry = TRUE
 )
-```
-
-```{r}
+#
+#
+#
 ggplot(income_tx) +
   geom_sf(aes(fill = estimate)) +
   scale_fill_viridis_c() +
@@ -33,9 +33,9 @@ ggplot(income_tx) +
     caption = "Source: U.S. Census Bureau, 2020 ACS 5-year estimates"
   ) +
   theme_void()
-```
-
-```{r}
+#
+#
+#
 #| message: false
 #| cache: true
 edu_state <- get_acs(
@@ -50,9 +50,9 @@ edu_state <- get_acs(
   summary_var = "B15003_001",
   year = 2020
 )
-```
-
-```{r}
+#
+#
+#
 edu_state |>
   group_by(GEOID, NAME) |>
   summarize(
@@ -73,9 +73,9 @@ edu_state |>
     caption = "Source: U.S. Census Bureau, 2020 ACS 5-year estimates"
   ) +
   theme_minimal()
-```
-
-```{r}
+#
+#
+#
 #| message: false
 age_ca <- get_acs(
   geography = "county",
@@ -87,28 +87,15 @@ age_ca <- get_acs(
   year = 2020,
   geometry = FALSE
 )
-```
-
-```{r}
-age_ca_wide <- age_ca |>
+#
+#
+#
+age_ca |>
   select(GEOID, NAME, variable, estimate) |>
-  pivot_wider(names_from = variable, values_from = estimate)
-
-ggplot(age_ca_wide, aes(x = median_age, y = population)) +
-  geom_point() +
-  geom_text(
-    data = slice_max(age_ca_wide, population, n = 5),
-    aes(label = NAME),
-    vjust = -0.5,
-    check_overlap = TRUE
-  ) +
-  scale_y_log10() +
-  labs(
-    title = "County Population and Median Age in California",
-    x = "Median age (years)",
-    y = "Population (log scale)",
-    caption = "Source: U.S. Census Bureau, 2020 ACS 5-year estimates"
-  ) +
-  theme_minimal()
-```
-
+  pivot_wider(names_from = variable, values_from = estimate) |>
+  arrange(desc(population))
+#
+#
+#
+#
+#
