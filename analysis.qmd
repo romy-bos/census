@@ -1,0 +1,37 @@
+---
+title: "Analyzing US Census Data"
+format: html
+execute:
+  echo: false
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(tidycensus)
+library(sf)
+```
+
+```{r}
+#| message: false
+income_tx <- get_acs(
+  geography = "county",
+  variables = "B19013_001",
+  state = "TX",
+  year = 2020,
+  geometry = TRUE
+)
+```
+
+```{r}
+ggplot(income_tx) +
+  geom_sf(aes(fill = estimate)) +
+  scale_fill_viridis_c() +
+  labs(
+    title = "Median Household Income by County in Texas",
+    fill = "Median household income",
+    caption = "Source: U.S. Census Bureau, 2020 ACS 5-year estimates"
+  ) +
+  theme_void()
+```
+
